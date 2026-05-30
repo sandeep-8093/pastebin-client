@@ -1,0 +1,88 @@
+/* ── Logout Page ────────────────────────────────── */
+/* Reuses .auth-blob from Auth.css — import that too */
+@import './Auth.css';
+
+.logout-page {
+  position: relative;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-md);
+  overflow: hidden;
+}
+
+.logout-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.logout-icon-wrap {
+  width: 80px;
+  height: 80px;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-lg);
+  animation: wave 2s ease-in-out infinite;
+}
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25%  { transform: rotate(-10deg); }
+  75%  { transform: rotate(10deg); }
+}
+.logout-icon { font-size: 2.2rem; }
+
+.logout-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-sm);
+  color: var(--text-primary);
+}
+
+.logout-msg {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: var(--space-xl);
+}
+
+.logout-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.logout-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 13px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 4px 15px rgba(239,68,68,0.3);
+}
+.logout-btn:hover {
+  box-shadow: 0 6px 25px rgba(239,68,68,0.45);
+}
+
+.logout-cancel {
+  width: 100%;
+  justify-content: center;
+  padding: 13px;
+  font-size: 0.9rem;
+  text-align: center;
+  display: block;
+}
