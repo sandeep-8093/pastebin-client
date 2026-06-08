@@ -38,36 +38,39 @@ const languageLabels = {
 };
 
 export default function NewPaste() {
-  const [title, setTitle]             = useState("Untitled Paste");
+  const [title, setTitle]             = useState("");
   const [pasteContent, setPasteContent] = useState("");
-  const [timeout, setTimeout]         = useState(0);
+  const [timeout, setTimeout]         = useState("");
   const [language, setLanguage]       = useState("plaintext");
-  const [pasteID, setPasteID]         = useState(nanoid());
+  const [pasteID, setPasteID]         = useState("");
   const [submitting, setSubmitting]   = useState(false);
   let history = useHistory();
 
   function submitPaste() {
     setSubmitting(true);
     let exp_date;
-    if (!timeout || timeout === 0) {
+    const parsedTimeout = timeout === "" ? 0 : Number(timeout);
+    if (!parsedTimeout || parsedTimeout === 0) {
       exp_date = Date.now() + 24 * 60 * 60 * 1000;
-    } else if (timeout > 0) {
-      exp_date = new Date(Date.now() + timeout * 60 * 1000);
+    } else if (parsedTimeout > 0) {
+      exp_date = new Date(Date.now() + parsedTimeout * 60 * 1000);
     } else {
       exp_date = null;
     }
 
+    const finalPasteID = pasteID.trim() || nanoid();
+
     userRequest
       .post("paste/add", {
-        idx: pasteID,
-        title: title,
+        idx: finalPasteID,
+        title: title.trim() || "Untitled Paste",
         paste: pasteContent,
         expireAt: exp_date,
         language: language,
       })
       .then(() => {
         M.toast({ html: "✅ Paste created successfully!" });
-        history.push("/paste/" + pasteID);
+        history.push("/paste/" + finalPasteID);
       })
       .catch((err) => {
         setSubmitting(false);

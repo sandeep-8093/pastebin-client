@@ -37,7 +37,7 @@ const languageLabels = {
 export default function EditPaste() {
   const [title, setTitle]               = useState("");
   const [pasteContent, setPasteContent] = useState("");
-  const [timeout, setTimeoutValue]      = useState(0);
+  const [timeout, setTimeoutValue]      = useState("");
   const [language, setLanguage]         = useState("plaintext");
   const [submitting, setSubmitting]     = useState(false);
   const { pasteId: paramPasteID }       = useParams();
@@ -48,12 +48,14 @@ export default function EditPaste() {
       .get(`paste/get/${paramPasteID}`)
       .then((response) => {
         const { title, paste, expireAt, language } = response.data;
-        setTitle(title);
-        setPasteContent(paste);
+        setTitle(title || "");
+        setPasteContent(paste || "");
         if (language) setLanguage(language);
         if (expireAt) {
           const mins = Math.floor((new Date(expireAt).getTime() - Date.now()) / 60000);
           setTimeoutValue(Math.max(0, mins));
+        } else {
+          setTimeoutValue("");
         }
       })
       .catch((err) => console.error("Error fetching paste:", err));
@@ -61,8 +63,9 @@ export default function EditPaste() {
 
   function submitPaste() {
     setSubmitting(true);
-    const exp_date = timeout > 0
-      ? new Date(Date.now() + timeout * 60 * 1000)
+    const parsedTimeout = timeout === "" ? 0 : Number(timeout);
+    const exp_date = parsedTimeout > 0
+      ? new Date(Date.now() + parsedTimeout * 60 * 1000)
       : null;
 
     userRequest
@@ -150,6 +153,7 @@ export default function EditPaste() {
                     type="number"
                     min="0"
                     className="input-modern"
+                    placeholder="0 = 24h default"
                     value={timeout}
                     onChange={(e) => setTimeoutValue(e.target.value)}
                   />
