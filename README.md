@@ -1,8 +1,26 @@
-# Getting Started with Create React App
+# Pastebin Client
 Hosted at : https://pastebin-client.netlify.app/
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Environment Variables Setup
+To connect to the backend server, you must configure your environment variables:
 
+**Local Development (`.env`)**
+For local development, use your local server:
+```env
+REACT_APP_API_URL=http://localhost:5000/
+```
+
+**Production (`.env.production`)**
+For production builds, point to the deployed Render server:
+```env
+REACT_APP_API_URL=https://pastebin-server8093.onrender.com/
+```
+
+---
+
+# Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## Available Scripts
 
 In the project directory, you can run:
