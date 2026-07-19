@@ -1,5 +1,22 @@
 # Pastebin Client
-Hosted at : https://pastebin-client.netlify.app/
+Hosted on Vercel (CI/CD via GitHub).
+
+## 🚀 Local Full-Stack Setup
+To run the Pastebin application locally (both client and server), follow these steps:
+
+1. **Start the Backend Server**
+   - Navigate to the `pastebin-server` directory.
+   - Run `npm install` (if you haven't already).
+   - Create a `.env` file with `MONGODB_URI` pointing to your local or Atlas MongoDB.
+   - Run `npm start`. The server will run on `http://localhost:5000/`.
+
+2. **Start the Frontend Client**
+   - Navigate to this `pastebin-client` directory.
+   - Run `npm install --legacy-peer-deps` (required for older React dependencies).
+   - Ensure your `.env` file has `REACT_APP_API_URL=http://localhost:5000/`.
+   - Run `npm start`. The client will open at `http://localhost:3000/`.
+
+---
 
 ## Environment Variables Setup
 To connect to the backend server, you must configure your environment variables:
@@ -10,11 +27,14 @@ For local development, use your local server:
 REACT_APP_API_URL=http://localhost:5000/
 ```
 
-**Production (`.env.production`)**
+**Production (`.env.production` or Vercel Environment Variables)**
 For production builds, point to the deployed Render server:
 ```env
 REACT_APP_API_URL=https://pastebin-server8093.onrender.com/
 ```
+
+**Vercel Deployment Note:**
+Because this project uses older React dependencies (e.g. `react-codemirror2`), it requires the `--legacy-peer-deps` flag to install correctly. This is automatically handled by the included `.npmrc` file, but if you run into peer dependency errors on Vercel, you can override the **Install Command** in your Vercel project settings to: `npm install --legacy-peer-deps`.
 
 ---
 
