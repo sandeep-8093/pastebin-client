@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { customAlphabet } from "nanoid";
 import M from "materialize-css/dist/js/materialize.min.js";
 import { userRequest } from "../requestMethods";
 import { Controlled as CodeMirror } from "react-codemirror2";
@@ -15,7 +14,6 @@ import "codemirror/mode/htmlmixed/htmlmixed.js";
 import "codemirror/mode/clike/clike.js";
 import "./NewPaste.css";
 
-const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 10);
 
 const languageModes = {
   plaintext: null,
@@ -47,6 +45,12 @@ export default function NewPaste() {
   let history = useHistory();
 
   function submitPaste() {
+    // Validate: content must not be empty
+    if (!pasteContent.trim()) {
+      M.toast({ html: "⚠️ Paste content cannot be empty!" });
+      return;
+    }
+
     setSubmitting(true);
     let exp_date;
     const parsedTimeout = timeout === "" ? 0 : Number(timeout);
@@ -58,24 +62,27 @@ export default function NewPaste() {
       exp_date = null;
     }
 
-    const finalPasteID = pasteID.trim() || nanoid();
+    // Only send idx if the user explicitly typed a custom alias.
+    // When blank, let the server generate a spec-compliant 6-char key.
+    const trimmedAlias = pasteID.trim();
+    const payload = {
+      title: title.trim() || "Untitled Paste",
+      paste: pasteContent,
+      expireAt: exp_date,
+      language: language,
+    };
+    if (trimmedAlias) payload.idx = trimmedAlias;
 
     userRequest
-      .post("paste/add", {
-        idx: finalPasteID,
-        title: title.trim() || "Untitled Paste",
-        paste: pasteContent,
-        expireAt: exp_date,
-        language: language,
-      })
-      .then(() => {
+      .post("paste/add", payload)
+      .then((res) => {
         M.toast({ html: "✅ Paste created successfully!" });
-        history.push("/paste/" + finalPasteID);
+        history.push("/paste/" + res.data.idx);
       })
       .catch((err) => {
         setSubmitting(false);
         if (err.response) {
-          if (err.response.data === "pasteid-exists") {
+          if (err.response.data?.error === "pasteid-exists") {
             M.toast({ html: "❌ That paste link is already in use!" });
           } else {
             M.toast({ html: err.response.data?.error || err.message });

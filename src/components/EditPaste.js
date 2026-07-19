@@ -62,19 +62,29 @@ export default function EditPaste() {
   }, [paramPasteID]);
 
   function submitPaste() {
+    // Validate: content must not be empty
+    if (!pasteContent.trim()) {
+      M.toast({ html: "⚠️ Paste content cannot be empty!" });
+      return;
+    }
+
     setSubmitting(true);
     const parsedTimeout = timeout === "" ? 0 : Number(timeout);
-    const exp_date = parsedTimeout > 0
-      ? new Date(Date.now() + parsedTimeout * 60 * 1000)
-      : null;
+
+    // Build the update payload carefully:
+    // Only include expireAt if the user entered a positive timeout.
+    // Sending null would wipe the paste's existing expiry date.
+    const updatePayload = {
+      title,
+      paste: pasteContent,
+      language: language,
+    };
+    if (parsedTimeout > 0) {
+      updatePayload.expireAt = new Date(Date.now() + parsedTimeout * 60 * 1000);
+    }
 
     userRequest
-      .put(`paste/edit/${paramPasteID}`, {
-        title,
-        paste: pasteContent,
-        expireAt: exp_date,
-        language: language,
-      })
+      .put(`paste/edit/${paramPasteID}`, updatePayload)
       .then(() => {
         M.toast({ html: "✅ Paste updated successfully!" });
         history.push("/paste/" + paramPasteID);
@@ -82,7 +92,8 @@ export default function EditPaste() {
       .catch((err) => {
         setSubmitting(false);
         console.error("Error updating paste:", err);
-        M.toast({ html: "❌ Failed to update paste." });
+        const msg = err.response?.data?.error || "❌ Failed to update paste.";
+        M.toast({ html: msg });
       });
   }
 

@@ -53,6 +53,14 @@ export default function ShowPaste(props) {
     });
   };
 
+  const handleRawClick = (e) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      e.preventDefault();
+      alert("Please sign in to view the raw format.");
+    }
+  };
+
   if (!paste) {
     return (
       <div className="empty-state fade-in">
@@ -190,9 +198,10 @@ export default function ShowPaste(props) {
             </button>
             <a
               className="copy-btn"
-              href={`${window.location.hostname === "localhost" ? "http://localhost:5000/paste/raw" : "https://pastebin-server-p6ni.onrender.com/paste/raw"}/${idx}?token=${localStorage.getItem("token")}`}
+              href={`${process.env.REACT_APP_API_URL || "http://localhost:5000/"}paste/raw/${idx}?token=${localStorage.getItem("token")}`}
               target="_blank"
               rel="noreferrer"
+              onClick={handleRawClick}
               style={{
                 background: "transparent",
                 border: "1px solid var(--border-subtle)",
