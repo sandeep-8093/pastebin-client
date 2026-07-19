@@ -1,5 +1,5 @@
 # Pastebin Client
-Hosted on Vercel (CI/CD via GitHub).
+Hosted on Vercel (CI/CD via GitHub): https://pastebin-client-one.vercel.app/
 
 ## 🚀 Local Full-Stack Setup
 To run the Pastebin application locally (both client and server), follow these steps:
